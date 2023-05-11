@@ -1,0 +1,80 @@
+﻿@model IEnumerable<TesteProgramacao.Models.Pessoa>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Adicionar Pessoa", "Create")
+</p>
+<table class="table" id="tblPessoas">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cidade)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cidade)
+                </td>
+                <td>
+                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                    <button type="button" class="btn btn-link" data-item="@item.Id">Deletar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".btn-link").click(function () {
+                var id = $(this).attr('data-item');
+                if (confirm("Você tem certeza que gostaria de excluir este registro?")) {
+                    $.ajax({
+                        method: "POST",
+                        url: "/Pessoa/Delete/" + id,
+                        success: function (data) {
+                            $("#tblPessoas tbody > tr").remove();
+                            $.each(data, function (i, pessoa) {
+                                $("#tblPessoas tbody").append(
+                                    "<tr>" +
+                                    "   <td>" + pessoa.Nome + "</td>" +
+                                    "   <td>" + pessoa.Email + "</td>" +
+                                    "   <td>" + pessoa.Cidade + "</td>" +
+                                    "   <td>" +
+                                    "       <a href='/Pessoa/Edit/" + pessoa.Id + "'>Editar</a> |" +
+                                    "       <button type="button" class="btn btn - link" data-item="" + pessoa.Id + "">Deletar</button>" +
+                                    "   </td>" +
+                                "</tr>"
+                                );
+                            });
+                        },
+                        error: function (data) {
+                            alert("Houve um erro na pesquisa.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
