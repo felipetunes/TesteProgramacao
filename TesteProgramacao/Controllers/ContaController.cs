@@ -8,65 +8,65 @@ using TesteProgramacao.Repository;
 
 namespace TesteProgramacao.Controllers
 {
-    public class PessoaController : Controller
+    public class ContaController : Controller
     {
-        private PessoaRepository respository = new PessoaRepository();
-        // GET: Pessoa
+        private ContaRepository respository = new ContaRepository();
+        // GET: Conta
         public ActionResult Index()
         {
             return View(respository.GetAll());
         }
 
-        // GET: Pessoa/Create
+        // GET: Conta/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Pessoa/Create
+        // POST: Conta/Create
         [HttpPost]
-        public ActionResult Create(Pessoa pessoa)
+        public ActionResult Create(Conta conta)
         {
             if (ModelState.IsValid)
             {
-                respository.Save(pessoa);
+                respository.Save(conta);
                 return RedirectToAction("Index");
             }
             else
             {
-                return View(pessoa);
+                return View(conta);
             }
         }
 
-        // GET: Pessoa/Edit/5
+        // GET: Conta/Edit/5
         public ActionResult Edit(int id)
         {
-            var pessoa = respository.GetById(id);
+            var conta = respository.GetById(id);
 
-            if (pessoa == null)
+            if (conta == null)
             {
                 return HttpNotFound();
             }
 
-            return View(pessoa);
+            return View(conta);
         }
 
-        // POST: Pessoa/Edit/5
+        // POST: Conta/Edit/5
         [HttpPost]
-        public ActionResult Edit(Pessoa pessoa)
+        public ActionResult Edit(Conta conta)
         {
             if (ModelState.IsValid)
             {
-                respository.Update(pessoa);
+                respository.Update(conta);
                 return RedirectToAction("Index");
             }
             else
             {
-                return View(pessoa);
+                return View(conta);
             }
         }
 
-        // POST: Pessoa/Delete/5
+        // POST: Conta/Delete/5
         [HttpPost]
         public ActionResult Delete(int id)
         {

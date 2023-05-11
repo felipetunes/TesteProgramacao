@@ -8,16 +8,16 @@ using TesteProgramacao.Models;
 
 namespace TesteProgramacao.Repository
 {
-    public class PessoaRepository : AbstractRepository<Pessoa, int>
+    public class ContaRepository : AbstractRepository<Conta, int>
     {
-        ///<summary>Exclui uma pessoa pela entidade
-        ///<param name="entity">Referência de Pessoa que será excluída.</param>
+        ///<summary>Exclui uma conta pela entidade
+        ///<param name="entity">Referência de Conta que será excluída.</param>
         ///</summary>
-        public override void Delete(Pessoa entity)
+        public override void Delete(Conta entity)
         {
             using (var conn = new SqlConnection(StringConnection))
             {
-                string sql = "DELETE Pessoa Where Id=@Id";
+                string sql = "DELETE Conta Where Id=@Id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Id", entity.Id);
                 try
@@ -32,14 +32,14 @@ namespace TesteProgramacao.Repository
             }
         }
 
-        ///<summary>Exclui uma pessoa pelo ID
+        ///<summary>Exclui uma conta pelo ID
         ///<param name="id">Id do registro que será excluído.</param>
         ///</summary>
         public override void DeleteById(int id)
         {
             using (var conn = new SqlConnection(StringConnection))
             {
-                string sql = "DELETE Pessoa Where Id=@Id";
+                string sql = "DELETE Conta Where Id=@Id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Id", id);
                 try
@@ -54,17 +54,17 @@ namespace TesteProgramacao.Repository
             }
         }
 
-        ///<summary>Obtém todas as pessoas
-        ///<returns>Retorna as pessoas cadastradas.</returns>
+        ///<summary>Obtém todas as contas
+        ///<returns>Retorna as contas cadastradas.</returns>
         ///</summary>
-        public override List<Pessoa> GetAll()
+        public override List<Conta> GetAll()
         {
-            string sql = "Select Id, Nome, Email, Cidade, Endereco FROM Pessoa ORDER BY Nome";
+            string sql = "Select Id, Nome, Codigo FROM Conta ORDER BY Nome";
             using (var conn = new SqlConnection(StringConnection))
             {
                 var cmd = new SqlCommand(sql, conn);
-                List<Pessoa> list = new List<Pessoa>();
-                Pessoa p = null;
+                List<Conta> list = new List<Conta>();
+                Conta p = null;
                 try
                 {
                     conn.Open();
@@ -72,12 +72,12 @@ namespace TesteProgramacao.Repository
                     {
                         while (reader.Read())
                         {
-                            p = new Pessoa();
-                            p.Id = (int)reader["Id"];
-                            p.Nome = reader["Nome"].ToString();
-                            p.Email = reader["Email"].ToString();
-                            p.Cidade = reader["Cidade"].ToString();
-                            p.Endereco = reader["Endereco"].ToString();
+                            p = new Conta
+                            {
+                                Id = (Guid)reader["Id"],
+                                Nome = reader["Nome"].ToString(),
+                                Codigo = reader["Codigo"].ToString()
+                            };
                             list.Add(p);
                         }
                     }
@@ -90,18 +90,18 @@ namespace TesteProgramacao.Repository
             }
         }
 
-        ///<summary>Obtém uma pessoa pelo ID
+        ///<summary>Obtém uma conta pelo ID
         ///<param name="id">Id do registro que obtido.</param>
-        ///<returns>Retorna uma referência de Pessoa do registro encontrado ou null se ele não for encontrado.</returns>
+        ///<returns>Retorna uma referência de Conta do registro encontrado ou null se ele não for encontrado.</returns>
         ///</summary>
-        public override Pessoa GetById(int id)
+        public override Conta GetById(int id)
         {
             using (var conn = new SqlConnection(StringConnection))
             {
-                string sql = "Select Id, Nome, Email, Cidade, Endereco FROM Pessoa WHERE Id=@Id";
+                string sql = "Select Id, Nome, Codigo FROM Conta WHERE Id=@Id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Id", id);
-                Pessoa p = null;
+                Conta p = null;
                 try
                 {
                     conn.Open();
@@ -111,12 +111,10 @@ namespace TesteProgramacao.Repository
                         {
                             if (reader.Read())
                             {
-                                p = new Pessoa();
-                                p.Id = (int)reader["Id"];
+                                p = new Conta();
+                                p.Id = (Guid)reader["Id"];
                                 p.Nome = reader["Nome"].ToString();
-                                p.Email = reader["Email"].ToString();
-                                p.Cidade = reader["Cidade"].ToString();
-                                p.Endereco = reader["Endereco"].ToString();
+                                p.Codigo = reader["Codigo"].ToString();
                             }
                         }
                     }
@@ -129,19 +127,17 @@ namespace TesteProgramacao.Repository
             }
         }
 
-        ///<summary>Salva a pessoa no banco
-        ///<param name="entity">Referência de Pessoa que será salva.</param>
+        ///<summary>Salva a conta no banco
+        ///<param name="entity">Referência de Conta que será salva.</param>
         ///</summary>
-        public override void Save(Pessoa entity)
+        public override void Save(Conta entity)
         {
             using (var conn = new SqlConnection(StringConnection))
             {
-                string sql = "INSERT INTO Pessoa (Nome, Email, Cidade, Endereco) VALUES (@Nome, @Email, @Cidade, @Endereco)";
+                string sql = "INSERT INTO Conta (Nome, Codigo) VALUES (@Nome, @Codigo)";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Nome", entity.Nome);
-                cmd.Parameters.AddWithValue("@Email", entity.Email);
-                cmd.Parameters.AddWithValue("@Cidade", entity.Cidade);
-                cmd.Parameters.AddWithValue("@Endereco", entity.Endereco);
+                cmd.Parameters.AddWithValue("@Codigo", entity.Codigo);
                 try
                 {
                     conn.Open();
@@ -154,20 +150,18 @@ namespace TesteProgramacao.Repository
             }
         }
 
-        ///<summary>Atualiza a pessoa no banco
-        ///<param name="entity">Referência de Pessoa que será atualizada.</param>
+        ///<summary>Atualiza a conta no banco
+        ///<param name="entity">Referência de Conta que será atualizada.</param>
         ///</summary>
-        public override void Update(Pessoa entity)
+        public override void Update(Conta entity)
         {
             using (var conn = new SqlConnection(StringConnection))
             {
-                string sql = "UPDATE Pessoa SET Nome=@Nome, Email=@Email, Cidade=@Cidade, Endereco=@Endereco Where Id=@Id";
+                string sql = "UPDATE Conta SET Nome=@Nome, Codigo=@Codigo Where Id=@Id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Id", entity.Id);
                 cmd.Parameters.AddWithValue("@Nome", entity.Nome);
-                cmd.Parameters.AddWithValue("@Email", entity.Email);
-                cmd.Parameters.AddWithValue("@Cidade", entity.Cidade);
-                cmd.Parameters.AddWithValue("@Endereco", entity.Endereco);
+                cmd.Parameters.AddWithValue("@Codigo", entity.Codigo);
                 try
                 {
                     conn.Open();

@@ -1,12 +1,12 @@
-﻿@model IEnumerable<TesteProgramacao.Models.Pessoa>
+﻿@model IEnumerable<TesteProgramacao.Models.Conta>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Contas";
 }
 
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Adicionar Pessoa", "Create")
+    @Html.ActionLink("Adicionar Conta", "Create")
 </p>
 <table class="table" id="tblPessoas">
     <thead>
@@ -15,10 +15,7 @@
                 @Html.DisplayNameFor(model => model.Nome)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cidade)
+                @Html.DisplayNameFor(model => model.Codigo)
             </th>
             <th></th>
         </tr>
@@ -31,10 +28,7 @@
                     @Html.DisplayFor(modelItem => item.Nome)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cidade)
+                    @Html.DisplayFor(modelItem => item.Codigo)
                 </td>
                 <td>
                     @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
@@ -52,18 +46,17 @@
                 if (confirm("Você tem certeza que gostaria de excluir este registro?")) {
                     $.ajax({
                         method: "POST",
-                        url: "/Pessoa/Delete/" + id,
+                        url: "/Conta/Delete/" + id,
                         success: function (data) {
-                            $("#tblPessoas tbody > tr").remove();
-                            $.each(data, function (i, pessoa) {
-                                $("#tblPessoas tbody").append(
+                            $("#Conta tbody > tr").remove();
+                            $.each(data, function (i, conta) {
+                                $("#Conta tbody").append(
                                     "<tr>" +
-                                    "   <td>" + pessoa.Nome + "</td>" +
-                                    "   <td>" + pessoa.Email + "</td>" +
-                                    "   <td>" + pessoa.Cidade + "</td>" +
+                                    "   <td>" + conta.Nome + "</td>" +
+                                    "   <td>" + conta.Codigo + "</td>" +
                                     "   <td>" +
-                                    "       <a href='/Pessoa/Edit/" + pessoa.Id + "'>Editar</a> |" +
-                                    "       <button type="button" class="btn btn - link" data-item="" + pessoa.Id + "">Deletar</button>" +
+                                    "       <a href='/Conta/Edit/" + conta.Id + "'>Editar</a> |" +
+                                    "       <button type="button" class="btn btn - link" data-item="" + conta.Id + "">Deletar</button>" +
                                     "   </td>" +
                                 "</tr>"
                                 );
