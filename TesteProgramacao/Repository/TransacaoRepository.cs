@@ -59,7 +59,7 @@ namespace TesteProgramacao.Repository
             ///</summary>
             public override List<Transacao> GetAll()
             {
-                string sql = "Select Id, Data, Conciliado, CAST(Notas as VARCHAR(MAX)) AS Notas FROM Transacao ORDER BY Notas";
+                string sql = "Select Id, ContaID, CategoriaID, Data, Conciliado, Historico, CAST(Notas as VARCHAR(MAX)) AS Notas, CAST(Debito AS decimal(34,4)) AS Debito, CAST(Credito AS decimal(34,4)) AS Credito FROM Transacao ORDER BY Data";
                 using (var conn = new SqlConnection(StringConnection))
                 {
                     var cmd = new SqlCommand(sql, conn);
@@ -77,6 +77,11 @@ namespace TesteProgramacao.Repository
                                     Id = (Guid)reader["Id"],
                                     Notas = reader["Notas"].ToString(),
                                     Conciliado = Convert.ToInt32(reader["Conciliado"]),
+                                    Historico = reader["Historico"].ToString(),
+                                    Credito = Convert.ToDecimal(reader["Credito"]),
+                                    Debito = Convert.ToDecimal(reader["Debito"]),
+                                    ContaID = (Guid)reader["ContaID"],
+                                    CategoriaID = (Guid)reader["CategoriaID"],
                                     Data = Convert.ToDateTime(reader["Data"])
                                 };
                                 list.Add(p);
@@ -99,7 +104,7 @@ namespace TesteProgramacao.Repository
             {
                 using (var conn = new SqlConnection(StringConnection))
                 {
-                    string sql = "Select Id, Data, Notas, Conciliado FROM Transacao WHERE Id=@Id";
+                    string sql = "Select Id, ContaID, CategoriaID, Data, Notas, Credito, Debito, Conciliado, Historico FROM Transacao WHERE Id=@Id";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", id);
                     Transacao p = null;
@@ -116,6 +121,11 @@ namespace TesteProgramacao.Repository
                                     p.Id = (Guid)reader["Id"];
                                     p.Notas = reader["Notas"].ToString();
                                     p.Conciliado = Convert.ToInt32(reader["Conciliado"]);
+                                    p.Historico = reader["Historico"].ToString();
+                                    p.ContaID = (Guid)reader["Debito"];
+                                    p.ContaID = (Guid)reader["Credito"];
+                                    p.ContaID = (Guid)reader["ContaID"];
+                                    p.CategoriaID = (Guid)reader["CategoriaID"];
                                     p.Data = Convert.ToDateTime(reader["Data"]);
                                 }
                             }
@@ -136,12 +146,17 @@ namespace TesteProgramacao.Repository
             {
                 using (var conn = new SqlConnection(StringConnection))
                 {
-                    string sql = "INSERT INTO Transacao (Data, Notas, Conciliado) VALUES (@Data, @Notas, @Conciliado)";
+                    string sql = "INSERT INTO Transacao (Data, ContaID, CategoriaID, Debito, Credito, Notas, Conciliado, Historico) VALUES (@Data, @ContaID, @CategoriaID, @Debito, @Credito, @Notas, @Conciliado, @Historico)";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Notas", entity.Notas);
                     cmd.Parameters.AddWithValue("@Data", entity.Data);
                     cmd.Parameters.AddWithValue("@Conciliado", entity.Conciliado);
-                    try
+                    cmd.Parameters.AddWithValue("@Historico", entity.Historico);
+                    cmd.Parameters.AddWithValue("@Debito", entity.Debito);
+                    cmd.Parameters.AddWithValue("@Credito", entity.Credito);
+                    cmd.Parameters.AddWithValue("@ContaID", entity.Historico);
+                    cmd.Parameters.AddWithValue("@CategoriaID", entity.Historico);
+                try
                     {
                         conn.Open();
                         cmd.ExecuteNonQuery();
@@ -160,12 +175,17 @@ namespace TesteProgramacao.Repository
             {
                 using (var conn = new SqlConnection(StringConnection))
                 {
-                    string sql = "UPDATE Transacao SET Notas=@Notas, Codigo=@Codigo, Conciliado=@Conciliado Where Id=@Id";
+                    string sql = "UPDATE Transacao SET Notas=@Notas, ContaID=@ContaID, CategoriaID=@CategoriaID, Data=@Data, Conciliado=@Conciliado, Historico=@Historico, Debito=@Debito, Credito=@Credito Where Id=@Id";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", entity.Id);
                     cmd.Parameters.AddWithValue("@Notas", entity.Notas);
                     cmd.Parameters.AddWithValue("@Data", entity.Data);
                     cmd.Parameters.AddWithValue("@Conciliado", entity.Conciliado);
+                    cmd.Parameters.AddWithValue("@Historico", entity.Historico);
+                    cmd.Parameters.AddWithValue("@Debito", entity.Debito);
+                    cmd.Parameters.AddWithValue("@Credito", entity.Credito);
+                    cmd.Parameters.AddWithValue("@ContaID", entity.Historico);
+                    cmd.Parameters.AddWithValue("@CategoriaID", entity.Historico);
                 try
                     {
                         conn.Open();

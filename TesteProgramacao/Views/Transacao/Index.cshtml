@@ -20,6 +20,21 @@
             <th>
                 @Html.DisplayNameFor(model => model.Conciliado)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Historico)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContaID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoriaID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Debito)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Credito)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -35,6 +50,21 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Conciliado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Historico)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContaID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoriaID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Debito)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Credito)
             </td>
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
