@@ -8,7 +8,7 @@ using TesteProgramacao.Models;
 
 namespace TesteProgramacao.Repository
 {
-    public class ContaRepository : AbstractRepository<Conta, int>
+    public class ContaRepository : AbstractRepository<Conta, Guid>
     {
         ///<summary>Exclui uma conta pela entidade
         ///<param name="entity">Referência de Conta que será excluída.</param>
@@ -35,7 +35,7 @@ namespace TesteProgramacao.Repository
         ///<summary>Exclui uma conta pelo ID
         ///<param name="id">Id do registro que será excluído.</param>
         ///</summary>
-        public override void DeleteById(int id)
+        public override void DeleteById(Guid id)
         {
             using (var conn = new SqlConnection(StringConnection))
             {
@@ -94,7 +94,7 @@ namespace TesteProgramacao.Repository
         ///<param name="id">Id do registro que obtido.</param>
         ///<returns>Retorna uma referência de Conta do registro encontrado ou null se ele não for encontrado.</returns>
         ///</summary>
-        public override Conta GetById(int id)
+        public override Conta GetById(Guid id)
         {
             using (var conn = new SqlConnection(StringConnection))
             {

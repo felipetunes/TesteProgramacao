@@ -8,7 +8,7 @@ using TesteProgramacao.Models;
 
 namespace TesteProgramacao.Repository
 {
-        public class TransacaoRepository : AbstractRepository<Transacao, int>
+        public class TransacaoRepository : AbstractRepository<Transacao, Guid>
         {
             ///<summary>Exclui uma transação pela entidade
             ///<param name="entity">Referência de Transação que será excluída.</param>
@@ -35,7 +35,7 @@ namespace TesteProgramacao.Repository
             ///<summary>Exclui uma transacao pelo ID
             ///<param name="id">Id do registro que será excluído.</param>
             ///</summary>
-            public override void DeleteById(int id)
+            public override void DeleteById(Guid id)
             {
                 using (var conn = new SqlConnection(StringConnection))
                 {
@@ -59,7 +59,7 @@ namespace TesteProgramacao.Repository
             ///</summary>
             public override List<Transacao> GetAll()
             {
-                string sql = "Select Id, ContaID, CategoriaID, Data, Conciliado, Historico, CAST(Notas as VARCHAR(MAX)) AS Notas, CAST(Debito AS decimal(34,4)) AS Debito, CAST(Credito AS decimal(34,4)) AS Credito FROM Transacao ORDER BY Data";
+                string sql = "Select Id, ContaID, CategoriaID, Data, Conciliado, Historico, CAST(Notas as VARCHAR(MAX)) AS Notas, CAST(Debito AS decimal(34,4)) AS Debito, CAST(Credito AS decimal(34,4)) AS Credito FROM Transacao ORDER BY Data DESC";
                 using (var conn = new SqlConnection(StringConnection))
                 {
                     var cmd = new SqlCommand(sql, conn);
@@ -96,11 +96,54 @@ namespace TesteProgramacao.Repository
                 }
             }
 
-            ///<summary>Obtém uma transação pelo ID
-            ///<param name="id">Id do registro que obtido.</param>
-            ///<returns>Retorna uma referência de Transação do registro encontrado ou null se ele não for encontrado.</returns>
-            ///</summary>
-            public override Transacao GetById(int id)
+        ///<summary>Obtém todas as transações
+        ///<returns>Retorna as transações cadastradas.</returns>
+        ///</summary>
+        public List<Transacao> GetTransacaoByContaId(Guid contaId)
+        {
+            string sql = "Select Id, ContaID, CategoriaID, Data, Notas, Credito, Debito, Conciliado, Historico FROM Transacao WHERE contaId=@contaId";
+            using (var conn = new SqlConnection(StringConnection))
+            {
+                var cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@contaId", contaId);
+                List<Transacao> list = new List<Transacao>();
+                Transacao p = null;
+                try
+                {
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader(CommandBehavior.CloseConnection))
+                    {
+                        while (reader.Read())
+                        {
+                            p = new Transacao
+                            {
+                                Id = (Guid)reader["Id"],
+                                Notas = reader["Notas"].ToString(),
+                                Conciliado = Convert.ToInt32(reader["Conciliado"]),
+                                Historico = reader["Historico"].ToString(),
+                                Credito = Convert.ToDecimal(reader["Credito"]),
+                                Debito = Convert.ToDecimal(reader["Debito"]),
+                                ContaID = (Guid)reader["ContaID"],
+                                CategoriaID = (Guid)reader["CategoriaID"],
+                                Data = Convert.ToDateTime(reader["Data"])
+                            };
+                            list.Add(p);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                return list;
+            }
+        }
+
+        ///<summary>Obtém uma transação pelo ID
+        ///<param name="id">Id do registro que obtido.</param>
+        ///<returns>Retorna uma referência de Transação do registro encontrado ou null se ele não for encontrado.</returns>
+        ///</summary>
+        public override Transacao GetById(Guid id)
             {
                 using (var conn = new SqlConnection(StringConnection))
                 {
@@ -122,8 +165,8 @@ namespace TesteProgramacao.Repository
                                     p.Notas = reader["Notas"].ToString();
                                     p.Conciliado = Convert.ToInt32(reader["Conciliado"]);
                                     p.Historico = reader["Historico"].ToString();
-                                    p.ContaID = (Guid)reader["Debito"];
-                                    p.ContaID = (Guid)reader["Credito"];
+                                    p.Debito = Convert.ToDecimal(reader["Debito"]);
+                                    p.Credito = Convert.ToDecimal(reader["Credito"]);
                                     p.ContaID = (Guid)reader["ContaID"];
                                     p.CategoriaID = (Guid)reader["CategoriaID"];
                                     p.Data = Convert.ToDateTime(reader["Data"]);
@@ -139,10 +182,11 @@ namespace TesteProgramacao.Repository
                 }
             }
 
-            ///<summary>Salva a transação no banco
-            ///<param name="entity">Referência de Transação que será salva.</param>
-            ///</summary>
-            public override void Save(Transacao entity)
+
+        ///<summary>Salva a transação no banco
+        ///<param name="entity">Referência de Transação que será salva.</param>
+        ///</summary>
+        public override void Save(Transacao entity)
             {
                 using (var conn = new SqlConnection(StringConnection))
                 {
@@ -154,8 +198,8 @@ namespace TesteProgramacao.Repository
                     cmd.Parameters.AddWithValue("@Historico", entity.Historico);
                     cmd.Parameters.AddWithValue("@Debito", entity.Debito);
                     cmd.Parameters.AddWithValue("@Credito", entity.Credito);
-                    cmd.Parameters.AddWithValue("@ContaID", entity.Historico);
-                    cmd.Parameters.AddWithValue("@CategoriaID", entity.Historico);
+                    cmd.Parameters.AddWithValue("@ContaID", entity.ContaID);
+                    cmd.Parameters.AddWithValue("@CategoriaID", entity.CategoriaID);
                 try
                     {
                         conn.Open();

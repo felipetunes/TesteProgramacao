@@ -39,7 +39,7 @@ namespace TesteProgramacao.Controllers
         }
 
         // GET: Conta/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
             var conta = repository.GetById(id);
 
@@ -68,7 +68,7 @@ namespace TesteProgramacao.Controllers
 
         // POST: Conta/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
             repository.DeleteById(id);
             return Json(repository.GetAll());

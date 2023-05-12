@@ -13,10 +13,18 @@ namespace TesteProgramacao.Controllers
     {
         private TransacaoRepository repository = new TransacaoRepository();
         // GET: Transacao
-        public ActionResult Index()
+        public ActionResult Index(Guid? id)
         {
-            return View(repository.GetAll());
+            if (id == null)
+            {
+                return View(repository.GetAll());
+            }
+            else
+            {
+                return View(repository.GetTransacaoByContaId(id.Value));
+            }
         }
+
 
         // GET: Transacao/Create
         public ActionResult Create()
@@ -40,7 +48,7 @@ namespace TesteProgramacao.Controllers
         }
 
         // GET: Transacao/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
             var transacao = repository.GetById(id);
 
@@ -69,7 +77,7 @@ namespace TesteProgramacao.Controllers
 
         // POST: Transacao/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
             repository.DeleteById(id);
             return Json(repository.GetAll());
