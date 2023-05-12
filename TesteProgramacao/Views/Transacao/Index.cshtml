@@ -1,21 +1,24 @@
-﻿@model IEnumerable<TesteProgramacao.Models.Conta>
+﻿@model IEnumerable<TesteProgramacao.Models.Transacao>
 @{
-    ViewBag.Title = "Contas";
+    ViewBag.Title = "Transações";
 }
 
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Adicionar Conta", "Create")
+    @Html.ActionLink("Adicionar Transação", "Create")
 </p>
-<table class="table" id="Conta">
+<table class="table" id="Transacao">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.DisplayNameFor(model => model.Notas)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Codigo)
+                @Html.DisplayNameFor(model => model.Data)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Conciliado)
             </th>
             <th></th>
         </tr>
@@ -23,18 +26,21 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nome)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Codigo)
-                </td>
-                <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                    <button type="button" class="btn btn-link" data-item="@item.Id">Deletar</button>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Notas)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Data)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Conciliado)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                <button type="button" class="btn btn-link" data-item="@item.Id">Deletar</button>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
@@ -46,16 +52,16 @@
                 if (confirm("Você tem certeza que gostaria de excluir este registro?")) {
                     $.ajax({
                         method: "POST",
-                        url: "/Conta/Delete/" + id,
+                        url: "/Transacao/Delete/" + id,
                         success: function (data) {
                             $("#Conta tbody > tr").remove();
-                            $.each(data, function (i, conta) {
+                            $.each(data, function (i, transacao) {
                                 $("#Conta tbody").append(
                                     "<tr>" +
-                                    "   <td>" + conta.Nome + "</td>" +
-                                    "   <td>" + conta.Codigo + "</td>" +
+                                    "   <td>" + transacao.Nome + "</td>" +
+                                    "   <td>" + transacao.Codigo + "</td>" +
                                     "   <td>" +
-                                    "       <a href='/Conta/Edit/" + conta.Id + "'>Editar</a> |" +
+                                    "       <a href='/Transacao/Edit/" + transacao.Id + "'>Editar</a> |" +
                                     "       <button type="button" class="btn btn - link" data-item="" + conta.Id + "">Deletar</button>" +
                                     "   </td>" +
                                 "</tr>"

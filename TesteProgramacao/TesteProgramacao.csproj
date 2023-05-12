@@ -122,13 +122,17 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ContaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TransacaoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Pessoa.cs" />
+    <Compile Include="Models\Categoria.cs" />
+    <Compile Include="Models\Transacao.cs" />
+    <Compile Include="Models\Conta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AbstractRepository.cs" />
     <Compile Include="Repository\ContaRepository.cs" />
+    <Compile Include="Repository\TransacaoRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -169,6 +173,9 @@
     <Content Include="Views\Conta\Index.cshtml" />
     <Content Include="Views\Conta\Create.cshtml" />
     <Content Include="Views\Conta\Edit.cshtml" />
+    <Content Include="Views\Transacao\Index.cshtml" />
+    <Content Include="Views\Transacao\Create.cshtml" />
+    <Content Include="Views\Transacao\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

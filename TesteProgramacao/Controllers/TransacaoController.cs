@@ -8,24 +8,25 @@ using TesteProgramacao.Repository;
 
 namespace TesteProgramacao.Controllers
 {
-    public class ContaController : Controller
+
+    public class TransacaoController : Controller
     {
-        private ContaRepository repository = new ContaRepository();
-        // GET: Conta
+        private TransacaoRepository repository = new TransacaoRepository();
+        // GET: Transacao
         public ActionResult Index()
         {
             return View(repository.GetAll());
         }
 
-        // GET: Conta/Create
+        // GET: Transacao/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Conta/Create
+        // POST: Transacao/Create
         [HttpPost]
-        public ActionResult Create(Conta conta)
+        public ActionResult Create(Transacao conta)
         {
             if (ModelState.IsValid)
             {
@@ -38,35 +39,35 @@ namespace TesteProgramacao.Controllers
             }
         }
 
-        // GET: Conta/Edit/5
+        // GET: Transacao/Edit/5
         public ActionResult Edit(int id)
         {
-            var conta = repository.GetById(id);
+            var transacao = repository.GetById(id);
 
-            if (conta == null)
+            if (transacao == null)
             {
                 return HttpNotFound();
             }
 
-            return View(conta);
+            return View(transacao);
         }
 
-        // POST: Conta/Edit/5
+        // POST: Transacao/Edit/5
         [HttpPost]
-        public ActionResult Edit(Conta conta)
+        public ActionResult Edit(Transacao transacao)
         {
             if (ModelState.IsValid)
             {
-                repository.Update(conta);
+                repository.Update(transacao);
                 return RedirectToAction("Index");
             }
             else
             {
-                return View(conta);
+                return View(transacao);
             }
         }
 
-        // POST: Conta/Delete/5
+        // POST: Transacao/Delete/5
         [HttpPost]
         public ActionResult Delete(int id)
         {
@@ -74,5 +75,4 @@ namespace TesteProgramacao.Controllers
             return Json(repository.GetAll());
         }
     }
-
 }
