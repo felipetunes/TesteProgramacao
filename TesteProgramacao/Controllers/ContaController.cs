@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,9 +13,34 @@ namespace TesteProgramacao.Controllers
     {
         private ContaRepository repository = new ContaRepository();
         // GET: Conta
-        public ActionResult Index()
+        public ActionResult Index(int? pagina, string sortOrder)
         {
-            return View(repository.GetAll());
+            int paginaTamanho = 8;
+            int paginaNumero = (pagina ?? 1);
+            ViewBag.NomeParm = sortOrder == "nome" ? "nome_desc" : "nome";
+            ViewBag.CodigoParm = sortOrder == "codigo" ? "codigo_desc" : "codigo";
+            var todasContas = new List<Conta>();
+
+            switch (sortOrder)
+            {
+                case "nome":
+                    todasContas = repository.GetAll().OrderByDescending(s => s.Nome).ToList();
+                    break;
+                case "nome_desc":
+                    todasContas = repository.GetAll().OrderBy(s => s.Nome).ToList();
+                    break;
+                case "codigo":
+                    todasContas = repository.GetAll().OrderByDescending(s => s.Codigo).ToList();
+                    break;
+                case "codigo_desc":
+                    todasContas = repository.GetAll().OrderBy(s => s.Codigo).ToList();
+                    break;
+                default:
+                    todasContas = repository.GetAll().ToList();
+                    break;
+            }
+
+            return View(todasContas.ToPagedList(paginaNumero, paginaTamanho));
         }
 
         // GET: Conta/Create

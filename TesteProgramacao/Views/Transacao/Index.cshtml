@@ -1,39 +1,40 @@
-﻿@model IEnumerable<TesteProgramacao.Models.Transacao>
+﻿@model PagedList.IPagedList<TesteProgramacao.Models.Transacao>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Transações";
 }
-
 <h2>Index</h2>
-
-<p>
+@*<p>
     @Html.ActionLink("Adicionar Transação", "Create")
-</p>
+</p>*@
+
+<div class="justify-content-center container">
+    <div style="margin:20px">
+        <form asp-action="Create" method="get" style="display: flex; flex-direction: row;">
+            <input name="FiltroInicio" class="form-control" type="datetime-local" style="width:180px" />
+            <input name="FiltroFim" class="form-control" type="datetime-local" style="width:180px;margin-left:10px;margin-right:15px" />
+            <input class="btn btn-outline-danger col-12 mt-2" type="submit" value="Buscar" />
+        </form>
+    </div>
+</div>
+
 <table class="table" id="Transacao">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Notas)
+                @Html.ActionLink("Data", "Index", new { sortOrder = ViewBag.DataParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Data)
+                @Html.ActionLink("Historico", "Index", new { sortOrder = ViewBag.HistoricoParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Conciliado)
+                Conta ID
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Historico)
+                Categoria ID
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ContaID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoriaID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Debito)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Credito)
+                Valor
             </th>
             <th></th>
         </tr>
@@ -41,39 +42,51 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Notas)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Data)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Conciliado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Historico)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContaID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoriaID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Debito)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Credito)
-            </td>
-            <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                <button type="button" class="btn btn-link" data-item="@item.Id">Deletar</button>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Data)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Historico)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContaID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoriaID)
+                </td>
+                <td>
+                    @{var valor = @item.Valor();}
+
+                    @if (valor >= 0)
+                    {
+                        <span> @Html.DisplayFor(modelItem => valor) </span>
+                    }
+                    else
+                    {
+                        <span style="color:red"> @Html.DisplayFor(modelItem => valor) </span>
+                    }
+                </td>
+                @*<td>
+                        @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                        <button type="button" class="btn btn-link" data-item="@item.Id">Deletar</button>
+                    </td>*@
+            </tr>
         }
+
     </tbody>
 </table>
+
+@*VALOR TOTAL*@
+
+<div class="container-fluid">
+    <div class="row" style="max-width:99%">
+        <div class="col-sm" style="float:left">Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount</div>
+        <div class="col-sm" style="float:right"><span style="margin-right: 10px; font-weight: bold; font-size:16px;">Saldo:  R$ @ViewBag.Total </span></div>
+    </div>
+</div>
+<div>@Html.PagedListPager(Model, pagina => Url.Action("Index", new { pagina, sortOrder = ViewBag.CurrentSort, CurrentFilter = ViewBag.CurrentFilter }))</div>
+
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
@@ -107,3 +120,4 @@
         });
     </script>
 }
+</form>

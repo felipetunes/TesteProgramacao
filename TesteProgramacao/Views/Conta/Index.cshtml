@@ -1,4 +1,5 @@
-﻿@model IEnumerable<TesteProgramacao.Models.Conta>
+﻿@model PagedList.IPagedList<TesteProgramacao.Models.Conta>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Contas";
 }
@@ -12,10 +13,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.ActionLink("Nome", "Index", new { sortOrder = ViewBag.NomeParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Codigo)
+                @Html.ActionLink("Codigo", "Index", new { sortOrder = ViewBag.CodigoParm })
             </th>
             <th></th>
         </tr>
@@ -23,22 +24,28 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Codigo)
-            </td>
-            <td>
-                @Html.ActionLink("Ver extrato", "Index", "Transacao", new { id = item.Id },null) |
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                <button type="button" class="btn btn-link" data-item="@item.Id">Deletar</button>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Codigo)
+                </td>
+                <td>
+                    @Html.ActionLink("Ver extrato", "Index", "Transacao", new { id = item.Id }, null) |
+                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                    <button type="button" class="btn btn-link" data-item="@item.Id">Deletar</button>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
+
+<div>
+    Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+    @Html.PagedListPager(Model, pagina => Url.Action("Index", new { pagina, sortOrder = ViewBag.CurrentSort, CurrentFilter = ViewBag.CurrentFilter }))
+</div>
+
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {

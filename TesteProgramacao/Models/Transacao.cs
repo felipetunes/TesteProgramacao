@@ -21,5 +21,10 @@ namespace TesteProgramacao.Models
         public decimal Credito { get; set; }
         public int Conciliado { get; set; }
         public string Notas { get; set; }
+
+        public decimal Valor()
+        {
+            return this.Credito - this.Debito;
+        }
     }
 }

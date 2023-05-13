@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,21 +9,77 @@ using TesteProgramacao.Repository;
 
 namespace TesteProgramacao.Controllers
 {
-
     public class TransacaoController : Controller
     {
         private TransacaoRepository repository = new TransacaoRepository();
         // GET: Transacao
-        public ActionResult Index(Guid? id)
+        public ActionResult Index(Guid? id, int? pagina, string sortOrder, DateTime? filtroInicio, DateTime? filtroFim, string currentFilter, string currentFilter2, int? page)
         {
+            int paginaTamanho = 10;
+            int paginaNumero = (pagina ?? 1);
+            ViewBag.DataParm = sortOrder == "data" ? "data_desc" : "data";
+            ViewBag.HistoricoParm = sortOrder == "hist" ? "hist_desc" : "hist";
+            var todasTransacoes = new List<Transacao>();
+            var transacoesComFiltro = new List<Transacao>();
+
             if (id == null)
             {
-                return View(repository.GetAll());
+                switch (sortOrder)
+                {
+                    case "data":
+                        todasTransacoes = repository.GetAll().OrderBy(s => s.Data).ToList();
+                        break;
+                    case "data_desc":
+                        todasTransacoes = repository.GetAll().OrderByDescending(s => s.Data).ToList();
+                        break;
+                    case "hist":
+                        todasTransacoes = repository.GetAll().OrderByDescending(s => s.Historico).ToList();
+                        break;
+                    case "hist_desc":
+                        todasTransacoes = repository.GetAll().ToList();
+                        break;
+                    default:
+                        todasTransacoes = repository.GetAll().ToList();
+                        break;
+                }
             }
             else
             {
-                return View(repository.GetTransacaoByContaId(id.Value));
+                switch (sortOrder)
+                {
+                    case "data":
+                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).OrderBy(s => s.Data).ToList();
+                        break;
+                    case "data_desc":
+                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).OrderByDescending(s => s.Data).ToList();
+                        break;
+                    case "hist":
+                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).OrderByDescending(s => s.Historico).ToList();
+                        break;
+                    case "hist_desc":
+                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).ToList();
+                        break;
+                    default:
+                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).ToList();
+                        break;
+                }
             }
+
+            if (filtroInicio != null && filtroFim != null)
+            {
+                transacoesComFiltro = todasTransacoes.Where(x => x.Data >= filtroInicio && x.Data <= filtroFim).ToList();
+            }
+            else
+            {
+                transacoesComFiltro = todasTransacoes;
+            }
+
+            decimal debitos = transacoesComFiltro.Sum(x => x.Debito);
+            decimal creditos = transacoesComFiltro.Sum(x => x.Credito);
+            ViewBag.Total = creditos - debitos;
+
+            return View(transacoesComFiltro.ToPagedList(paginaNumero, paginaTamanho));
+
         }
 
 
@@ -34,16 +91,16 @@ namespace TesteProgramacao.Controllers
 
         // POST: Transacao/Create
         [HttpPost]
-        public ActionResult Create(Transacao conta)
+        public ActionResult Create(Transacao transacao)
         {
             if (ModelState.IsValid)
             {
-                repository.Save(conta);
+                repository.Save(transacao);
                 return RedirectToAction("Index");
             }
             else
             {
-                return View(conta);
+                return View(transacao);
             }
         }
 

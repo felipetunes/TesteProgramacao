@@ -139,6 +139,49 @@ namespace TesteProgramacao.Repository
             }
         }
 
+        ///<summary>Obtém todas as transações
+        ///<returns>Retorna as transações cadastradas.</returns>
+        ///</summary>
+        public List<Transacao> GetTransacaoByFiltro(Guid contaId, DateTime DataInicio, DateTime DataFim)
+        {
+            string sql = "Select Id, ContaID, CategoriaID, Data, Notas, Credito, Debito, Conciliado, Historico FROM Transacao WHERE contaId=@contaId AND Data BETWEEN DataInicio AND DataFim";
+            using (var conn = new SqlConnection(StringConnection))
+            {
+                var cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@contaId", contaId);
+                List<Transacao> list = new List<Transacao>();
+                Transacao p = null;
+                try
+                {
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader(CommandBehavior.CloseConnection))
+                    {
+                        while (reader.Read())
+                        {
+                            p = new Transacao
+                            {
+                                Id = (Guid)reader["Id"],
+                                Notas = reader["Notas"].ToString(),
+                                Conciliado = Convert.ToInt32(reader["Conciliado"]),
+                                Historico = reader["Historico"].ToString(),
+                                Credito = Convert.ToDecimal(reader["Credito"]),
+                                Debito = Convert.ToDecimal(reader["Debito"]),
+                                ContaID = (Guid)reader["ContaID"],
+                                CategoriaID = (Guid)reader["CategoriaID"],
+                                Data = Convert.ToDateTime(reader["Data"])
+                            };
+                            list.Add(p);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                return list;
+            }
+        }
+
         ///<summary>Obtém uma transação pelo ID
         ///<param name="id">Id do registro que obtido.</param>
         ///<returns>Retorna uma referência de Transação do registro encontrado ou null se ele não for encontrado.</returns>
