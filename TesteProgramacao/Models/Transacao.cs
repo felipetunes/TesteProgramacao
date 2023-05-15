@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -9,12 +10,8 @@ namespace TesteProgramacao.Models
     public class Transacao
     {
         public Guid Id { get; set; }
-
-        [Required(ErrorMessage = "O campo ContaID é obrigatório.")]
         public Guid ContaID { get; set; }
-        [Required(ErrorMessage = "O campo CategoriaID é obrigatório.")]
         public Guid CategoriaID { get; set; }
-        [Required(ErrorMessage = "O campo Historico é obrigatório.")]
         public string Historico { get; set; }
         public DateTime Data { get; set; }
         public decimal Debito { get; set; }
@@ -22,9 +19,12 @@ namespace TesteProgramacao.Models
         public int Conciliado { get; set; }
         public string Notas { get; set; }
 
-        public decimal Valor()
+        
+        public string ContaCodigo { get; set; }
+        public decimal Valor { get; set; }
+        public string ValorTotal()
         {
-            return this.Credito - this.Debito;
+            return (this.Credito - this.Debito).ToString("C2", CultureInfo.CurrentCulture);
         }
     }
 }

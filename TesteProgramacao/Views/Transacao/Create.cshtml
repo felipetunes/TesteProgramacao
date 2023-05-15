@@ -3,7 +3,7 @@
     ViewBag.Title = "Cadastrar";
 }
 
-<h2>Cadastrar nova transação</h2>
+<h3>Realizar nova transação</h3>
 
 
 @using (Html.BeginForm())
@@ -11,67 +11,32 @@
     @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
-    <h4>Transação</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
-        @Html.LabelFor(model => model.CategoriaID, htmlAttributes: new { @class = "control-label col-md-2" })
+        <span class="control-label col-md-2">Categoria</span>
         <div class="col-md-10">
-            @Html.EditorFor(model => model.CategoriaID, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.CategoriaID, "", new { @class = "text-danger" })
+            @Html.DropDownList("nomesCategorias", new SelectList(ViewBag.NomesCategorias), htmlAttributes: new { @class = "form-control" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Conciliado, htmlAttributes: new { @class = "control-label col-md-2" })
+        <span class="control-label col-md-2">Código da Conta</span>
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Conciliado, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Conciliado, "", new { @class = "text-danger" })
+            @Html.Editor("codigoConta", new { htmlAttributes = new { @class = "form-control", maxlength = "8" } })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.ContaID, htmlAttributes: new { @class = "control-label col-md-2" })
+        <span class="control-label col-md-2">Valor</span>
         <div class="col-md-10">
-            @Html.EditorFor(model => model.ContaID, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.ContaID, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.Valor, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+            @Html.ValidationMessageFor(model => model.Valor, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Credito, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Credito, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Credito, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Data, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Data, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Data, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Debito, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Debito, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Debito, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Historico, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Historico, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Historico, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Notas, htmlAttributes: new { @class = "control-label col-md-2" })
+        <span class="control-label col-md-2">Notas</span>
         <div class="col-md-10">
             @Html.EditorFor(model => model.Notas, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Notas, "", new { @class = "text-danger" })
@@ -87,7 +52,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Voltar", "Index")
 </div>
-<script src="~/Scripts/jquery.validate.min.js" />
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js" />

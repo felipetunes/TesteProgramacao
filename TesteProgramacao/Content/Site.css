@@ -7,6 +7,39 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    margin-top:15px;
+}
+
+.close-alert {
+    float: right;
+    margin-top: -5px;
+    width: 30px;
+    height: 31px;
+}
+
+.fixedButtons {
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 50px;
+    right: 0;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.saldo {
+    white-space: nowrap;
+    font-weight: bold;
+    font-size: 16px;
+    float: right;
+}
+
+.filterLists {
+    background-color: #eee;
+    border-radius: 5px;
+    border-color: lightgray;
+    border-width: 1px;
+    border-style: solid;
+    margin-bottom:5px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 

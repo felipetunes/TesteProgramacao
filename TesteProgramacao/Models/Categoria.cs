@@ -10,9 +10,9 @@ namespace TesteProgramacao.Models
     {
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "O campo nome é obrigatório.")]
-        public string Codigo { get; set; }
-
+        [Required(ErrorMessage = "O campo Nome é obrigatório.")]
         public string Nome { get; set; }
+        [Required(ErrorMessage = "O campo Tipo é obrigatório.")]
+        public int Tipo { get; set; }
     }
 }

@@ -10,10 +10,12 @@ namespace TesteProgramacao.Repository
 {
         public class TransacaoRepository : AbstractRepository<Transacao, Guid>
         {
-            ///<summary>Exclui uma transação pela entidade
-            ///<param name="entity">Referência de Transação que será excluída.</param>
-            ///</summary>
-            public override void Delete(Transacao entity)
+        private ContaRepository repositoryConta = new ContaRepository();
+
+        ///<summary>Exclui uma transação pela entidade
+        ///<param name="entity">Referência de Transação que será excluída.</param>
+        ///</summary>
+        public override void Delete(Transacao entity)
             {
                 using (var conn = new SqlConnection(StringConnection))
                 {
@@ -80,6 +82,7 @@ namespace TesteProgramacao.Repository
                                     Historico = reader["Historico"].ToString(),
                                     Credito = Convert.ToDecimal(reader["Credito"]),
                                     Debito = Convert.ToDecimal(reader["Debito"]),
+                                    ContaCodigo = repositoryConta.GetById((Guid)reader["ContaID"]).Codigo,
                                     ContaID = (Guid)reader["ContaID"],
                                     CategoriaID = (Guid)reader["CategoriaID"],
                                     Data = Convert.ToDateTime(reader["Data"])
@@ -124,6 +127,7 @@ namespace TesteProgramacao.Repository
                                 Credito = Convert.ToDecimal(reader["Credito"]),
                                 Debito = Convert.ToDecimal(reader["Debito"]),
                                 ContaID = (Guid)reader["ContaID"],
+                                ContaCodigo = repositoryConta.GetById((Guid)reader["ContaID"]).Codigo,
                                 CategoriaID = (Guid)reader["CategoriaID"],
                                 Data = Convert.ToDateTime(reader["Data"])
                             };

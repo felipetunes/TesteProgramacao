@@ -13,13 +13,23 @@ namespace TesteProgramacao.Controllers
     {
         private ContaRepository repository = new ContaRepository();
         // GET: Conta
-        public ActionResult Index(int? pagina, string sortOrder)
+        public ActionResult Index(int? pagina, string sortOrder, string tipoString, string searchString, int paginaTamanho = 10)
         {
-            int paginaTamanho = 8;
             int paginaNumero = (pagina ?? 1);
+            var todasContas = new List<Conta>();
+            var contasComFiltro = new List<Conta>();
             ViewBag.NomeParm = sortOrder == "nome" ? "nome_desc" : "nome";
             ViewBag.CodigoParm = sortOrder == "codigo" ? "codigo_desc" : "codigo";
-            var todasContas = new List<Conta>();
+
+            if(paginaTamanho < 0)
+            {
+                TempData["MensagemErro"] = $"Ops, informe uma quantidade válida de registros";
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.CurrentFilter = searchString;
+            ViewBag.CurrentFilter2 = tipoString;
+            ViewBag.CurrentFilter3 = paginaTamanho;
 
             switch (sortOrder)
             {
@@ -40,7 +50,24 @@ namespace TesteProgramacao.Controllers
                     break;
             }
 
-            return View(todasContas.ToPagedList(paginaNumero, paginaTamanho));
+            contasComFiltro = todasContas;
+            if (searchString != null)
+            {
+                if (tipoString == "Nome")
+                {
+                    contasComFiltro = todasContas.Where(x => x.Nome.Contains(searchString)).ToList();
+                }
+                if (tipoString == "Codigo")
+                {
+                    contasComFiltro = todasContas.Where(x => x.Codigo.Contains(searchString)).ToList();
+                }
+            }
+            else
+            {
+                pagina = 1;
+            }
+
+            return View(contasComFiltro.ToPagedList(paginaNumero, paginaTamanho));
         }
 
         // GET: Conta/Create
@@ -92,12 +119,40 @@ namespace TesteProgramacao.Controllers
             }
         }
 
-        // POST: Conta/Delete/5
-        [HttpPost]
         public ActionResult Delete(Guid id)
         {
             repository.DeleteById(id);
             return Json(repository.GetAll());
+        }
+
+        public ActionResult ApagarConfirmacao(Guid id)
+        {
+            Conta conta = repository.GetById(id);
+            return View(conta);
+        }
+
+        public ActionResult Apagar(Guid id)
+        {
+            try
+            {
+                repository.DeleteById(id);
+
+                //if (apagado)
+                //{
+                //    TempData["MensagemSucesso"] = "Conta apagado com sucesso!";
+                //}
+                //else
+                //{
+                //    TempData["MensagemErro"] = "Ops, não foi possível apagar a conta";
+                //}
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["MensagemErro"] = $"Ops, não conseguimos apagar sua conta, mais detalhes do erro: {ex.Message}";
+                return RedirectToAction("Index");
+            }
         }
     }
 
