@@ -40,9 +40,6 @@
             <th>
                 @Html.ActionLink("Historico", "Index", new { sortOrder = ViewBag.HistoricoParm })
             </th>
-                <th>
-                    Código da Conta
-                </th>
             <th>
                 Valor
             </th>
@@ -52,32 +49,29 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Data)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Historico)
-            </td>
+            <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ContaCodigo)
+                    @Html.DisplayFor(modelItem => item.Data)
                 </td>
-        <td>
-            @{var valor = @item.ValorTotal();}
+                <td>
+                    @Html.DisplayFor(modelItem => item.Historico)
+                </td>
+                <td>
+                    @{var valor = @item.ValorTotal();}
 
-            @if (valor.Contains("-"))
-            {
-                <span style="color:red">@Html.DisplayFor(modelItem => valor) </span>
-            }
-            else
-            {
-                <span>@Html.DisplayFor(modelItem => valor) </span>
-            }
-        </td>
+                    @if (valor.Contains("-"))
+                    {
+                        <span style="color:red">@Html.DisplayFor(modelItem => valor) </span>
+                    }
+                    else
+                    {
+                        <span>@Html.DisplayFor(modelItem => valor) </span>
+                    }
+                </td>
                 @*<td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                <button type="button" class="btn btn-link" data-item="@item.Id">Deletar</button>
-            </td>*@
+                        @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                        <button type="button" class="btn btn-link" data-item="@item.Id">Deletar</button>
+                    </td>*@
             </tr>
         }
 

@@ -21,7 +21,7 @@
     <div style="margin:20px">
         <form asp-action="Index" method="get" style="display: flex; flex-direction: row;">
             <label style="margin-top:6px">Quant. Registros</label>
-            <input name="PaginaTamanho" class="form-control" style="width: 80px; margin-left: 10px; margin-right: 20px" value="" />
+            <input name="PaginaTamanho" class="form-control" style="width: 80px; margin-left: 10px; margin-right: 20px" value="@ViewBag.CurrentFilter3" />
             <label style="margin-top:6px" for="buscarPorTipo">Tipo </label>
             <select name="tipoString" class=" form-control" style="width: 120px; margin-left: 10px; margin-right: 10px">
                 <option value=""> Selecione </option>
@@ -56,7 +56,7 @@
                     @Html.DisplayFor(modelItem => item.Codigo)
                 </td>
                 <td>
-                    @Html.ActionLink("Ver extrato", "Index", "Transacao", new { id = item.Id }, null) |
+                    @Html.ActionLink("Ver extrato", "ExtratoComId", "Transacao", new { id = item.Id }, null) |
                     @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
                     @Html.ActionLink("Apagar", "Apagar", new { id = item.Id}, new { onclick = "return confirm('Tem certeza que deseja deletar esta conta?');" })
 

@@ -137,15 +137,6 @@ namespace TesteProgramacao.Controllers
             {
                 repository.DeleteById(id);
 
-                //if (apagado)
-                //{
-                //    TempData["MensagemSucesso"] = "Conta apagado com sucesso!";
-                //}
-                //else
-                //{
-                //    TempData["MensagemErro"] = "Ops, não foi possível apagar a conta";
-                //}
-
                 return RedirectToAction("Index");
             }
             catch (Exception ex)

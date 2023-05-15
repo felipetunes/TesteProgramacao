@@ -5,50 +5,57 @@
 
 <h3>Realizar nova transação</h3>
 
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["MensagemErro"]
+        <button type="button" class="btn btn-sm close-alert" aria-label="Close">x</button>
+    </div>
+}
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        <span class="control-label col-md-2">Categoria</span>
-        <div class="col-md-10">
-            @Html.DropDownList("nomesCategorias", new SelectList(ViewBag.NomesCategorias), htmlAttributes: new { @class = "form-control" })
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <span class="control-label col-md-2">Categoria</span>
+            <div class="col-md-10">
+                @Html.DropDownList("nomesCategorias", new SelectList(ViewBag.NomesCategorias), htmlAttributes: new { @class = "form-control" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <span class="control-label col-md-2">Código da Conta</span>
-        <div class="col-md-10">
-            @Html.Editor("codigoConta", new { htmlAttributes = new { @class = "form-control", maxlength = "8" } })
+        <div class="form-group">
+            <span class="control-label col-md-2">Código da Conta</span>
+            <div class="col-md-10">
+                @Html.Editor("ContaCodigo", new { htmlAttributes = new { @class = "form-control", maxlength = "8" } })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <span class="control-label col-md-2">Valor</span>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Valor, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
-            @Html.ValidationMessageFor(model => model.Valor, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <span class="control-label col-md-2">Valor</span>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Valor, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                @Html.ValidationMessageFor(model => model.Valor, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <span class="control-label col-md-2">Notas</span>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Notas, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Notas, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <span class="control-label col-md-2">Notas</span>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Notas, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Notas, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Cadastrar" class="btn btn-default" />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Cadastrar" class="btn btn-default" />
+            </div>
         </div>
     </div>
-</div>
 }
 
 <div>

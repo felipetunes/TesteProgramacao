@@ -15,81 +15,43 @@ namespace TesteProgramacao.Controllers
         private TransacaoRepository repository = new TransacaoRepository();
         private CategoriaRepository repositoryCategoria = new CategoriaRepository();
         private ContaRepository repositoryConta = new ContaRepository();
+
         // GET: Transacao
-        public ActionResult Index(Guid? id, int? pagina, string sortOrder, DateTime? filtroInicio, DateTime? filtroFim, int? page, int paginaTamanho = 10)
+        public ActionResult Index(int? pagina, string sortOrder, DateTime? filtroInicio, DateTime? filtroFim, int paginaTamanho = 10)
         {
             int paginaNumero = (pagina ?? 1);
-            var todasTransacoes = new List<Transacao>();
-            var transacoesComFiltro = new List<Transacao>();
+            
+            if (paginaTamanho < 0)
+            {
+                TempData["MensagemErro"] = $"Ops, informe uma quantidade válida de registros";
+
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.CurrentFilter3 = paginaTamanho;
+
+            var extrato = ExtratoTransacoes(null, pagina, sortOrder, filtroInicio, filtroFim, paginaTamanho);
+
+            return View(extrato.ToPagedList(paginaNumero, paginaTamanho));
+        }
+
+        // GET: Transacao/ExtratoComId
+        public ActionResult ExtratoComId(Guid id, int? pagina, string sortOrder, DateTime? filtroInicio, DateTime? filtroFim, int paginaTamanho = 10)
+        {
+            int paginaNumero = (pagina ?? 1);
 
             if (paginaTamanho < 0)
             {
                 TempData["MensagemErro"] = $"Ops, informe uma quantidade válida de registros";
+
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DataParm = sortOrder == "data" ? "data_desc" : "data";
-            ViewBag.HistoricoParm = sortOrder == "hist" ? "hist_desc" : "hist";
-            ViewBag.EsconderCodigoConta = id == null ? false : true;
-            ViewBag.CurrentFilter = filtroInicio;
-            ViewBag.CurrentFilter2 = filtroFim;
             ViewBag.CurrentFilter3 = paginaTamanho;
 
-            if (id == null)
-            {
-                switch (sortOrder)
-                {
-                    case "data":
-                        todasTransacoes = repository.GetAll().OrderByDescending(s => s.Data).ToList();
-                        break;
-                    case "hist":
-                        todasTransacoes = repository.GetAll().OrderByDescending(s => s.Historico).ToList();
-                        break;
-                    default:
-                        todasTransacoes = repository.GetAll().OrderBy(s => s.Data).ToList();
-                        break;
-                }
-            }
-            else
-            {
-                switch (sortOrder)
-                {
-                    case "data":
-                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).OrderByDescending(s => s.Data).ToList();
-                        break;
-                    case "hist":
-                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).OrderByDescending(s => s.Historico).ToList();
-                        break;
-                    default:
-                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).OrderBy(s => s.Data).ToList();
-                        break;
-                }
-            }
+            var extrato = ExtratoTransacoes(id, pagina, sortOrder, filtroInicio, filtroFim, paginaTamanho);
 
-            if (filtroInicio != null && filtroFim != null)
-            {
-                transacoesComFiltro = todasTransacoes.Where(x => x.Data >= filtroInicio && x.Data <= filtroFim).ToList();
-                page = 1;
-            }
-            else if (filtroInicio != null)
-            {
-                transacoesComFiltro = todasTransacoes.Where(x => x.Data >= filtroInicio).ToList();
-                page = 1;
-            }
-            else if (filtroFim != null)
-            {
-                transacoesComFiltro = todasTransacoes.Where(x => x.Data <= filtroFim).ToList();
-                page = 1;
-            }
-            else
-            {
-                transacoesComFiltro = todasTransacoes;
-            }
-
- 
-            ViewBag.Total = Convert.ToDouble(transacoesComFiltro.Sum(x => x.Credito) - transacoesComFiltro.Sum(x => x.Debito)).ToString("C2", CultureInfo.CurrentCulture);
-
-            return View(transacoesComFiltro.ToPagedList(paginaNumero, paginaTamanho));
+            return View(extrato.ToPagedList(paginaNumero, paginaTamanho));
         }
 
         // GET: Transacao/Create
@@ -103,13 +65,27 @@ namespace TesteProgramacao.Controllers
 
         // POST: Transacao/Create
         [HttpPost]
-        public ActionResult Create(Transacao transacao, string nomesCategorias, string codigoConta)
+        public ActionResult Create(Transacao transacao, string nomesCategorias, string contaCodigo)
         {
             ViewBag.NomesCategorias = (from c in repositoryCategoria.GetAll()
                                        select c.Nome).Distinct();
 
-            var conta = repositoryConta.GetAll().Where(x => x.Codigo == codigoConta).ToList().FirstOrDefault();
+            var conta = repositoryConta.GetAll().Where(x => x.Codigo == contaCodigo).ToList().FirstOrDefault();
             var categoria = repositoryCategoria.GetAll().Where(x => x.Nome == nomesCategorias).ToList().FirstOrDefault();
+
+            if (conta == null)
+            {
+                TempData["MensagemErro"] = $"Ops, o código da conta informado não é válido";
+
+                return RedirectToAction("Create");
+            }
+
+            if (transacao.Valor.ToString().Contains("-"))
+            {
+                TempData["MensagemErro"] = $"Ops, informe um valor positivo! O sistema indicará se é débito ou crédito de acordo à Categoria.";
+
+                return RedirectToAction("Create");
+            }
 
             if (ModelState.IsValid)
             {
@@ -165,6 +141,69 @@ namespace TesteProgramacao.Controllers
         {
             repository.DeleteById(id);
             return Json(repository.GetAll());
+        }
+
+        public List<Transacao> ExtratoTransacoes(Guid? id, int? pagina, string sortOrder, DateTime? filtroInicio, DateTime? filtroFim, int paginaTamanho = 10)
+        {
+            var todasTransacoes = new List<Transacao>();
+            var transacoesComFiltro = new List<Transacao>();
+
+            ViewBag.DataParm = sortOrder == "data" ? "data_desc" : "data";
+            ViewBag.HistoricoParm = sortOrder == "hist" ? "hist_desc" : "hist";
+            ViewBag.CurrentFilter = filtroInicio;
+            ViewBag.CurrentFilter2 = filtroFim;
+
+            if (id == null)
+            {
+                switch (sortOrder)
+                {
+                    case "data":
+                        todasTransacoes = repository.GetAll().OrderByDescending(s => s.Data).ToList();
+                        break;
+                    case "hist":
+                        todasTransacoes = repository.GetAll().OrderByDescending(s => s.Historico).ToList();
+                        break;
+                    default:
+                        todasTransacoes = repository.GetAll().OrderBy(s => s.Data).ToList();
+                        break;
+                }
+            }
+            else
+            {
+                switch (sortOrder)
+                {
+                    case "data":
+                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).OrderByDescending(s => s.Data).ToList();
+                        break;
+                    case "hist":
+                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).OrderByDescending(s => s.Historico).ToList();
+                        break;
+                    default:
+                        todasTransacoes = repository.GetTransacaoByContaId(id.Value).OrderBy(s => s.Data).ToList();
+                        break;
+                }
+            }
+
+            if (filtroInicio != null && filtroFim != null)
+            {
+                transacoesComFiltro = todasTransacoes.Where(x => x.Data >= filtroInicio && x.Data <= filtroFim).ToList();
+            }
+            else if (filtroInicio != null)
+            {
+                transacoesComFiltro = todasTransacoes.Where(x => x.Data >= filtroInicio).ToList();
+            }
+            else if (filtroFim != null)
+            {
+                transacoesComFiltro = todasTransacoes.Where(x => x.Data <= filtroFim).ToList();
+            }
+            else
+            {
+                transacoesComFiltro = todasTransacoes;
+            }
+
+            ViewBag.Total = Convert.ToDouble(transacoesComFiltro.Sum(x => x.Credito) - transacoesComFiltro.Sum(x => x.Debito)).ToString("C2", CultureInfo.CurrentCulture);
+
+            return transacoesComFiltro;
         }
     }
 }

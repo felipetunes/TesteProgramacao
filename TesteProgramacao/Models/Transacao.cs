@@ -19,8 +19,9 @@ namespace TesteProgramacao.Models
         public int Conciliado { get; set; }
         public string Notas { get; set; }
 
-        
+        [Required(ErrorMessage = "O campo Código é obrigatório.")]
         public string ContaCodigo { get; set; }
+        [Required(ErrorMessage = "O campo Valor é obrigatório.")]
         public decimal Valor { get; set; }
         public string ValorTotal()
         {
