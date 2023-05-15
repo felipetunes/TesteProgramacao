@@ -35,5 +35,14 @@ Esta página contém somente os dois campos "Nome" e "Código" essenciais para c
   será do tipo débito ou crédito, ai é só informar qual é a conta, e uma nota que não é obrigatória.
 ![trans2](https://github.com/felipetunes/ControleDeEventos/assets/44438287/e86de07c-3612-4c3c-a0f4-bb2b920412de)
 
-# Conclusão
+# Acesso ao Projeto
+Clone e abra o projeto no Visual Studio. <br />
+Aponte a connectionString pro seu banco no arquivo Web.config
+e execute o projeto.
 
+Se der um erro referente ao compilador roslyn, <br />
+execute isso no console do gerenciador de pacotes: <br />
+Update-Package Microsoft.CodeDom.Providers.DotNetCompilerPlatform -r
+
+# Conclusão
+Acredito que a aplicação desenvolvida cumpre com o proposto pelo teste de programação, podendo fazer as filtragens de valores e listando as informações de forma eficiente.
