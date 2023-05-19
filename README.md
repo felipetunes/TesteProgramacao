@@ -16,7 +16,7 @@ que por fim, faça com que através de alguns filtros apresente um extrato banc�
 (Em desenvolvimento) Não tem informação relevante ainda pois não é o foco.
 
 #### Contas
- Nesta página, você encontrará uma lista completa de todas as contas de clientes cadastrados, organizadas por "Nome" e "Código". Aqui você tem a opção de visualizar o extrato completo de sua conta, editar informações ou excluir o registro, tudo com facilidade e rapidez. Você também pode personalizar sua visualização por página, selecionando quantos registros deseja ver e filtrar a lista por tipo (Nome ou Código). Além disso, caso precise cadastrar uma nova conta, um botão de adição está disponível na parte inferior direita da página.
+ Nesta página, você encontrará uma lista completa de todas as contas de clientes cadastrados, organizadas por "Nome" e "Código". Aqui você tem a opção de visualizar o <strong>extrato completo de sua conta</strong>, editar informações ou excluir o registro, tudo com facilidade e rapidez. Você também pode personalizar sua visualização por página, selecionando quantos registros deseja ver e filtrar a lista por tipo (Nome ou Código). Além disso, caso precise cadastrar uma nova conta, um botão de adição está disponível na parte inferior direita da página.
 ![contas1](https://github.com/felipetunes/ControleDeEventos/assets/44438287/5484906f-6eb1-4e18-98d5-ff374d880247)
 
 #### Cadastrar nova conta
